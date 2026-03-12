@@ -15,7 +15,7 @@ spec:
       containers:
         - name: redis
           image: redis:7
-          # --- 자원 설정 (Resource Quotas) 추가 ---
+          # --- 이 부분을 추가해주세요 (들여쓰기 주의!) ---
           resources:
             requests:
               memory: "64Mi"
@@ -23,7 +23,7 @@ spec:
             limits:
               memory: "128Mi"
               cpu: "200m"
-          # ---------------------------------------
+          # ------------------------------------------
           ports:
             - containerPort: 6379
           livenessProbe:
