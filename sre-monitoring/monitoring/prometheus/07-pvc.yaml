@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: prometheus-data
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: prometheus
+    app.kubernetes.io/part-of: full-count-monitoring
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: PLACEHOLDER_STORAGE_CLASS
+  resources:
+    requests:
+      storage: 10Gi
