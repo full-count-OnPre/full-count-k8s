@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: full-count-front-config
+  namespace: app
+  labels:
+    app.kubernetes.io/name: full-count-front
+    app.kubernetes.io/part-of: full-count
+data:
+  VITE_API_BASE_URL: "/api"
+  VITE_WS_URL: ""
+  VITE_WS_PATH: "/ws/socket.io"
+  VITE_DEFAULT_GAME_DATE: "2026-03-11"
+  VITE_DEMO_GAME_DATE: "2026-03-23"
+  VITE_DEMO_CHAT_GAME_ID: "PLACEHOLDER_DEMO_CHAT_GAME_ID"
