@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: app
+  labels:
+    project: full-count
+    owner: team-app
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: data
+  labels:
+    project: full-count
+    owner: team-data
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: db
+  labels:
+    project: full-count
+    owner: team-db
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monitoring
+  labels:
+    project: full-count
+    owner: team-sre
