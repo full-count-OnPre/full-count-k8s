@@ -1,12 +1,22 @@
-apiVersion: v1
-kind: ConfigMap
+apiVersion: batch/v1
+kind: CronJob
 metadata:
-  name: collector-config
-data:
-  MLB_API_BASE_URL: "https://statsapi.mlb.com/api/v1"
-  COLLECTOR_INTERVAL: "300"
-  REDIS_HOST: "redis-service"
-  REDIS_PORT: "6379"
-  POSTGRES_HOST: "postgresql-service"
-  POSTGRES_PORT: "5432"
-  POSTGRES_DB: "fullcount"
+  name: mlb-collector
+spec:
+  schedule: "*/5 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: mlb-collector
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: mlb-collector
+              image: YOUR_COLLECTOR_IMAGE:latest
+              envFrom:
+                - configMapRef:
+                    name: collector-config
+                - secretRef:
+                    name: postgresql-secret
