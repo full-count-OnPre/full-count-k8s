@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: full-count-api
+  namespace: app
+  labels:
+    app.kubernetes.io/name: full-count-api
+    app.kubernetes.io/part-of: full-count
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: PLACEHOLDER_HOST
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: full-count-api
+                port:
+                  number: 3000

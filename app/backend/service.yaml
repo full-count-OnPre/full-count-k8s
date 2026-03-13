@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: full-count-api
+  namespace: app
+  labels:
+    app.kubernetes.io/name: full-count-api
+    app.kubernetes.io/part-of: full-count
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: full-count-api
+  ports:
+    - name: http
+      port: 3000
+      targetPort: http
