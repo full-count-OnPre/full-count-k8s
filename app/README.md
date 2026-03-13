@@ -8,7 +8,7 @@
 
 확장 방향:
 
-- `backend-api/`: REST API Deployment, Service, Ingress(`/api`)
+- `backend/`: REST API Deployment, Service, Ingress(`/api`)
 - `chat-service/`: 실시간 채팅 Deployment, Service, Ingress(`/ws`)
 
 권장 원칙:
