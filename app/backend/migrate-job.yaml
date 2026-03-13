@@ -14,7 +14,7 @@ spec:
       restartPolicy: OnFailure
       containers:
         - name: migrate
-          image: PLACEHOLDER_API_IMAGE
+          image: javor10/fullcount-api:latest
           command: ["npx", "prisma", "migrate", "deploy"]
           envFrom:
             - configMapRef:

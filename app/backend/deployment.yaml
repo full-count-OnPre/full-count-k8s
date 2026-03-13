@@ -26,8 +26,8 @@ spec:
         role: app
       containers:
         - name: api
-          image: PLACEHOLDER_API_IMAGE
-          imagePullPolicy: IfNotPresent
+          image: javor10/fullcount-api:latest
+          imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 3000
