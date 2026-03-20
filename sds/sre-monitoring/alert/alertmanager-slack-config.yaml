@@ -1,0 +1,31 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: slack-alert-config
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  route:
+    receiver: slack-receiver
+    groupBy:
+      - alertname
+    groupWait: 10s
+    groupInterval: 1m
+    repeatInterval: 1h
+    matchers:
+      - name: severity
+        matchType: '=~'
+        value: 'info|warning|critical'
+  receivers:
+    - name: slack-receiver
+      slackConfigs:
+        - apiURL:
+            name: alertmanager-slack-webhook
+            key: url
+          sendResolved: true
+          title: '[{{ .Status | toUpper }}] {{ .CommonAnnotations.summary }}'
+          text: |
+            {{ .CommonAnnotations.description }}
+            Alert: {{ .CommonLabels.alertname }}
+            Severity: {{ .CommonLabels.severity }}

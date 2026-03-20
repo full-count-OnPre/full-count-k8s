@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: fullcount-migrate
+  namespace: app
+  labels:
+    app.kubernetes.io/name: full-count-api
+    app.kubernetes.io/part-of: full-count
+spec:
+  template:
+    spec:
+      nodeSelector:
+        role: app
+      restartPolicy: OnFailure
+      containers:
+        - name: migrate
+          image: javor10/fullcount-api:latest
+          command: ["npx", "prisma", "db", "push"]
+          envFrom:
+            - secretRef:
+                name: fullcount-secrets

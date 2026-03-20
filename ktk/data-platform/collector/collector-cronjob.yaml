@@ -1,0 +1,47 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: mlb-collector
+  namespace: data
+spec:
+  schedule: "0 0 * * *"
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 60
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: mlb-collector
+        spec:
+          # --- nodeSelector 추가 ---
+          nodeSelector:
+            node-role: data
+          # ------------------------
+          restartPolicy: OnFailure
+          containers:
+            - name: mlb-collector
+              image: javor10/fullcount-api:latest
+              imagePullPolicy: IfNotPresent
+              # --- 재민님 요청 사항 추가 시작 ---
+              command: ["npx", "tsx", "src/collector/index.js"]
+              args:
+                - "--from"
+                - "2025-10-01"
+                - "--to"
+                - "2025-10-29"
+              # --- 재민님 요청 사항 추가 끝 ---
+              envFrom:
+                - configMapRef:
+                    name: collector-config
+                - secretRef:
+                    name: collector-db-secret
+              resources:
+                requests:
+                  cpu: "100m"
+                  memory: "128Mi"
+                limits:
+                  cpu: "300m"
+                  memory: "256Mi"

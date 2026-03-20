@@ -1,0 +1,55 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: postgres-backup-cronjob
+  namespace: db
+spec:
+  # [실무 설정 1] 매일 새벽 4시 00분에 실행
+  schedule: "0 4 * * *"
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          automountServiceAccountToken: false
+          containers:
+          - name: backup-worker
+            image: postgres:16-alpine # 용량이 작은 alpine 이미지 권장
+            env:
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-secret
+                  key: POSTGRES_PASSWORD
+            command: ["/bin/sh", "-c"]
+            args:
+              - |
+                DATE=$(date +%Y%m%d_%H%M%S);
+                BACKUP_PATH="/backup/fullcount_backup_$DATE.sql";
+
+                # 1. DB 백업 수행
+                pg_dump -h postgresql-service -U fullcount_user -d fullcount > $BACKUP_PATH;
+
+                # 2. 백업 결과 확인
+                if [ $? -eq 0 ]; then
+                  echo "✅ Backup success: $BACKUP_PATH";
+                else
+                  echo "❌ Backup failed!";
+                  exit 1;
+                fi
+
+                # [실무 설정 2] 7일(7*24시간) 지난 오래된 백업 파일 자동 삭제
+                echo "🧹 Cleaning up old backups (older than 7 days)...";
+                find /backup -name "fullcount_backup_*.sql" -type f -mtime +7 -delete;
+
+                # 3. 현재 남은 파일 목록 출력
+                ls -lh /backup;
+            volumeMounts:
+            - name: backup-storage
+              mountPath: /backup
+          volumes:
+          - name: backup-storage
+            persistentVolumeClaim:
+              claimName: postgres-backup-pvc
+          restartPolicy: OnFailure

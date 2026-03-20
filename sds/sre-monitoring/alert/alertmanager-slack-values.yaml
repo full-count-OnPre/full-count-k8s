@@ -1,0 +1,30 @@
+alertmanager:
+  tplConfig: true
+  stringConfig: |
+    global:
+      resolve_timeout: 5m
+
+    route:
+      receiver: null
+      group_by: ['alertname']
+      group_wait: 10s
+      group_interval: 1m
+      repeat_interval: 1h
+
+      routes:
+        - receiver: slack-receiver
+          matchers:
+            - alertname=~"NodeNotReady|PodRestartHigh|ClusterCPUHigh"
+
+    receivers:
+      - name: slack-receiver
+        slack_configs:
+          - api_url: 'https://hooks.slack.com/services/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'
+            send_resolved: true
+            title: '{{ "{{" }} .Status {{ "}}" }} | {{ "{{" }} .CommonAnnotations.summary {{ "}}" }}'
+            text: |
+              {{ "{{" }} .CommonAnnotations.description {{ "}}" }}
+              Alert: {{ "{{" }} .CommonLabels.alertname {{ "}}" }}
+              Severity: {{ "{{" }} .CommonLabels.severity {{ "}}" }}
+
+      - name: null

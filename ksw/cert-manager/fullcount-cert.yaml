@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: fullcount-certificate
+  namespace: app
+spec:
+  secretName: fullcount-tls
+  issuerRef:
+    name: fullcount-selfsigned
+    kind: Issuer
+  commonName: www.fullcount.com
+  dnsNames:
+  - www.fullcount.com
