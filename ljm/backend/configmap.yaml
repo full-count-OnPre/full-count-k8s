@@ -8,5 +8,5 @@ metadata:
     app.kubernetes.io/part-of: full-count
 data:
   PORT: "3000"
-  REDIS_HOST: "redis.data.svc.cluster.local"
+  REDIS_HOST: "redis-service.data.svc.cluster.local"
   REDIS_PORT: "6379"
