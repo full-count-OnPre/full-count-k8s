@@ -1,0 +1,46 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: sre-alert-rules
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  groups:
+    - name: sre.rules
+      rules:
+        - alert: NodeNotReady
+          expr: kube_node_status_condition{condition="Ready", status="true"} == 0
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Node Not Ready"
+            description: "A Kubernetes node has been NotReady for more than 2 minutes."
+
+        - alert: PodRestartHigh
+          expr: increase(kube_pod_container_status_restarts_total[10m]) > 2
+          for: 2m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Pod Restart Increased"
+            description: "A pod restarted more than 2 times in the last 10 minutes."
+
+        - alert: ClusterCPUHigh
+          expr: 100 * sum(rate(container_cpu_usage_seconds_total{container!="", image!=""}[5m])) / sum(machine_cpu_cores) > 80
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Cluster CPU Usage High"
+            description: "Cluster CPU usage is above 80% for 5 minutes."
+
+        - alert: TestAlertAlwaysFiring
+          expr: vector(1)
+          for: 1m
+          labels:
+            severity: info
+          annotations:
+            summary: "Test Alert"
+            description: "This is a test alert for alertmanager validation."

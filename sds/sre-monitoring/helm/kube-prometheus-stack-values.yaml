@@ -1,0 +1,22 @@
+grafana:
+  adminPassword: "admin1234"
+
+  nodeSelector:
+    node-role: infra
+
+prometheus:
+  prometheusSpec:
+    nodeSelector:
+      node-role: infra
+
+alertmanager:
+  alertmanagerSpec:
+    nodeSelector:
+      node-role: infra
+
+kube-state-metrics:
+  nodeSelector:
+    node-role: infra
+
+prometheus-node-exporter:
+  enabled: false

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: collector-config
+  namespace: data  # 1. 수집기가 배포될 방(data)을 명시해야 합니다.
+data:
+  MLB_API_BASE_URL: "https://statsapi.mlb.com/api/v1"
+  COLLECTOR_INTERVAL: "300"
+  # 2. 다른 네임스페이스에 있는 서비스는 반드시 FQDN 풀네임을 써야 합니다.
+  REDIS_HOST: "redis-service.data.svc.cluster.local"
+  REDIS_PORT: "6379"
+  POSTGRES_HOST: "postgresql-service.db.svc.cluster.local"
+  POSTGRES_PORT: "5432"
+  POSTGRES_DB: "fullcount"

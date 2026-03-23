@@ -1,0 +1,9 @@
+apiVersion: metallb.io/v1beta1
+kind: BGPPeer
+metadata:
+  name: core-edge-router-peer
+  namespace: metallb-system
+spec:
+  myASN: 65003
+  peerASN: 65001
+  peerAddress: 192.168.80.253
