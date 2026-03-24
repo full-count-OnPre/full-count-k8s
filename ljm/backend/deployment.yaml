@@ -53,6 +53,10 @@ spec:
               port: http
             initialDelaySeconds: 15
             periodSeconds: 20
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
           resources:
             requests:
               cpu: 200m
